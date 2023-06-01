@@ -13,6 +13,7 @@ class RetailAdmin(admin.ModelAdmin):
     list_editable = ['debt']
     ordering = ['-debt', 'city']
     search_fields = ('city',)
+    list_filter = ('city',)
 
 
 @admin.register(Individual)
@@ -21,3 +22,5 @@ class IndividualAdmin(admin.ModelAdmin):
     list_editable = ['debt']
     ordering = ['-debt', 'city']
     search_fields = ('city',)
+    list_filter = ('city',)
+
