@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "trading-network"
+version = "0.1.0"
+description = ""
+authors = ["Дмитрий С. <112376316+DSvistelnik@users.noreply.github.com>"]
+#readme = "README.md"
+packages = [{include = "trading_network"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.2.1"
+psycopg2 = "^2.9.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
