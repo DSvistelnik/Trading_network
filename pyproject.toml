@@ -10,6 +10,7 @@ packages = [{include = "trading_network"}]
 python = "^3.11"
 django = "^4.2.1"
 psycopg2 = "^2.9.6"
+djangorestframework = "^3.14.0"
 
 
 [build-system]

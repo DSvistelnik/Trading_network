@@ -9,68 +9,49 @@ class Product(models.Model):
 
     class Meta:
         verbose_name = "Продукция"
-        verbose_name_plural = "Продукции"
+        verbose_name_plural = "Продукция"
 
     def __str__(self):
         return self.title
 
 
-class Factory(models.Model):
-    '''Создание модели Завод'''
-    name = models.CharField(max_length=200)
-    email = models.EmailField(max_length=200)
+class Contacts(models.Model):
+    '''Создание модели Контакты'''
+    email = models.EmailField(max_length=100)
     country = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     street = models.CharField(max_length=200)
     number_house = models.IntegerField()
-    product = models.ManyToManyField(Product)
 
     class Meta:
-        verbose_name = "Завод"
-        verbose_name_plural = "Заводы"
+        verbose_name = "Контакты"
+        verbose_name_plural = "Контакты"
 
     def __str__(self):
-        return self.name
+        return f'{self.country}, {self.city}'
 
 
-class Retail(models.Model):
-    '''Создание модели Розничная сеть'''
+class Network(models.Model):
+    """Создание модели Сети, в которую входят 3 звена:
+    Завод, Розничная сеть, Индивидуальный предприниматель
+    """
+    class Link(models.IntegerChoices):
+        Factory = 0
+        Retail = 1
+        Individual = 2
+
     name = models.CharField(max_length=200)
+    link = models.PositiveIntegerField(choices=Link.choices)
+    contacts = models.ForeignKey('network_links.Contacts', on_delete=models.SET_NULL, null=True, blank=True)
+    provider = models.ForeignKey('network_links.Network', on_delete=models.SET_NULL, null=True, blank=True)
     debt = models.DecimalField(max_digits=10, decimal_places=2)
+    product = models.ManyToManyField('network_links.Product')
     time = models.DateTimeField(auto_now_add=True)
-    email = models.CharField(max_length=200)
-    country = models.CharField(max_length=200)
-    city = models.CharField(max_length=200)
-    street = models.CharField(max_length=200)
-    number_house = models.IntegerField()
-    product = models.ManyToManyField(Product)
-    provider = models.ForeignKey(Factory, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = "Розничная сеть"
-        verbose_name_plural = "Розничные сети"
+        verbose_name = 'Звено сети'
+        verbose_name_plural = 'Звенья сети'
 
     def __str__(self):
-        return self.name
-
-
-class Individual(models.Model):
-    '''Создание модели Индивидуальный предприниматель'''
-    name = models.CharField(max_length=200)
-    debt = models.DecimalField(max_digits=10, decimal_places=2)
-    time = models.DateTimeField(auto_now_add=True)
-    email = models.CharField(max_length=200)
-    country = models.CharField(max_length=200)
-    city = models.CharField(max_length=200)
-    street = models.CharField(max_length=200)
-    number_house = models.IntegerField()
-    product = models.ManyToManyField(Product)
-    provider = models.ForeignKey(Factory, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Индивидуальный предприниматель"
-        verbose_name_plural = "Индивидуальные предприниматели"
-
-    def __str__(self):
-        return self.name
+        return f'{self.name}'
 
