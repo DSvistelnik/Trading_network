@@ -44,7 +44,8 @@ class NetworkView(View):
         for product in products:
             response.append({
                 "id": product.id,
-                "name": product.name
+                "name": product.name,
+                "link": product.link
             })
 
         return JsonResponse(response, safe=False)
