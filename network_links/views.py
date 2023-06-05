@@ -1,67 +1,46 @@
-from django.http import JsonResponse
-
-from django.views import View
-from django.views.generic import DetailView
-
-from network_links.models import Product, Network
-
-
-class ProductView(View):
-    '''Представление для Продукции'''
-    def get(self, request):
-        products = Product.objects.all()
-
-        response = []
-        for product in products:
-            response.append({
-                "id": product.id,
-                "title": product.title,
-                "model": product.model
-            })
-
-        return JsonResponse(response, safe=False)
+from rest_framework import viewsets
+from network_links.filters import CountryFilter
+from network_links.models import Product, Network, Contacts
+from network_links.permissions import IsActivePermission
+from network_links.serializers import NetworkSerializer, ContactSerializer, ProductSerializer, \
+    NetworkDetailSerializer
 
 
-class ProductDetailView(DetailView):
-    '''Представление для Продукции по id'''
-    model = Product
+class NetworkViewSet(viewsets.ModelViewSet):
+    """ Представление для работы с торговой сетью"""
+    queryset = Network.objects.all()
+    serializer_class = NetworkSerializer
+    permission_classes = [IsActivePermission]
 
-    def get(self, request, *args, **kwargs):
-        product = self.get_object()
-
-        return JsonResponse({
-            "title": product.title,
-            "model": product.model
-        })
-
-
-class NetworkView(View):
-    '''Представление для Сети'''
-    def get(self, request):
-        products = Network.objects.all()
-
-        response = []
-        for product in products:
-            response.append({
-                "id": product.id,
-                "name": product.name,
-                "link": product.link
-            })
-
-        return JsonResponse(response, safe=False)
+#Запрет обновления через API поля «Задолженность перед поставщиком»
+    def perform_update(self, serializer):
+        serializer.validated_data.pop('debt', None)
+        super().perform_update(serializer)
 
 
-class NetworkDetailView(DetailView):
-    '''Представление для Завода по id'''
-    model = Network
+class ContactViewSet(viewsets.ModelViewSet):
+    """Представление для работы с контактами"""
+    queryset = Contacts.objects.all()
+    permission_classes = [IsActivePermission]
+    serializer_class = ContactSerializer
 
-    def get(self, request, *args, **kwargs):
-        product = self.get_object()
 
-        return JsonResponse({
-            "name": product.name,
-            "country": product.country,
-            "city": product.city
-        })
+class ProductViewSet(viewsets.ModelViewSet):
+    """Представление для работы с продукцией торговой сети"""
+    queryset = Product.objects.all()
+    permission_classes = [IsActivePermission]
+    serializer_class = ProductSerializer
+
+
+class NetworkDetailViewSet(viewsets.ModelViewSet):
+    """Представление для торговой сети с контактами и продукцией данной торговой сети"""
+    queryset = Network.objects.all()
+    serializer_class = NetworkDetailSerializer
+    permission_classes = [IsActivePermission]
+    filterset_class = CountryFilter
+
+    def perform_update(self, serializer):
+        serializer.validated_data.pop('debt', None)
+        super().perform_update(serializer)
 
 
