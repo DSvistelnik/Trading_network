@@ -1,20 +1,25 @@
 Проект "Онлайн платформа для торговой сети электроники"
+Project "Online platform for electronics retail network"
 
 Веб-приложение, с API интерфейсом и админ-панелью.
+A web application with an API interface and an admin panel.
 
 Технические требования:
+Technical requirements:
 - Python 3.8+
 - Django 3+
 - DRF 3.10+
 - PostgreSQL 10+
 
 Торговая сеть электроники представляет собой иерархическую структуру из 3 уровней:
+The electronics retail network is a hierarchical structure of 3 levels:
 
 - Завод;
 - Розничная сеть;
 - Индивидуальный предприниматель.
 
 Каждое звено сети ссылается только на одного поставщика оборудования и обладает следующими элементами:
+Each link in the network refers to only one equipment supplier and has the following elements:
 
 - Название;
 - Контакты:
@@ -32,15 +37,17 @@
 - Время создания (заполняется автоматически при создании).
 
 Созданные объекты имеют вывод в админ-панель.
+The created objects have an output to the admin panel.
 
 На странице объекта сети добавлены:
+On the page of the network object added:
 
 - ссылка на «Поставщика»;
 - фильтр по названию города;
 - «admin action», очищающий задолженность перед поставщиком у выбранных объектов.
 
--
 В проекте использован DRF, создан набор представлений:
+DRF was used in the project, a set of views was created:
 - CRUD для модели поставщика;
 - введен запрет на обновление через API поля «Задолженность перед поставщиком»;
 - добавлена возможность фильтрации объектов по определенной стране.
